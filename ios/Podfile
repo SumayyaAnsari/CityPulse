@@ -1,0 +1,67 @@
+# Resolve react_native_pods.rb with node to allow for hoisting
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', __dir__]).strip
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+linkage = ENV['USE_FRAMEWORKS']
+if linkage != nil
+  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+  use_frameworks! :linkage => linkage.to_sym
+end
+
+target 'CityPulse' do
+  config = use_native_modules!
+
+  # === Add static frameworks here as required by Firebase v9+ / RNFB v15+ ===
+  # Place this BEFORE use_react_native! so Firebase Swift pods are integrated as frameworks.
+  use_frameworks! :linkage => :static
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  # RN Firebase and related pods (explicit) - adjust if you don't use any of these
+  pod 'RNFBApp', :path => '../node_modules/@react-native-firebase/app'
+  pod 'RNFBAuth', :path => '../node_modules/@react-native-firebase/auth'
+  pod 'RNKeychain', :path => '../node_modules/react-native-keychain' if File.directory?('../node_modules/react-native-keychain')
+
+
+  post_install do |installer|
+    # Run RN helper if available
+    if defined?(react_native_post_install)
+      react_native_post_install(
+        installer,
+        config[:reactNativePath],
+        :mac_catalyst_enabled => false,
+        # :ccache_enabled => true
+      )
+    end
+
+    # Safely set DEFINES_MODULE for relevant pod/native targets (avoid calling native_target on unsupported objects)
+    installer.pod_targets.each do |pod|
+      next unless pod.respond_to?(:native_target) && pod.native_target
+
+      if pod.name.start_with?('Firebase') || ['GoogleUtilities', 'RecaptchaInterop', 'FirebaseCoreInternal', 'FirebaseAuthInterop', 'FirebaseAppCheckInterop'].include?(pod.name)
+        pod.native_target.build_configurations.each do |config|
+          config.build_settings['DEFINES_MODULE'] = 'YES'
+        end
+      end
+    end
+
+    # Also apply to the pods project targets where appropriate
+    installer.pods_project.targets.each do |target|
+      if target.name.start_with?('Firebase') || ['GoogleUtilities', 'RecaptchaInterop'].include?(target.name)
+        target.build_configurations.each do |config|
+          config.build_settings['DEFINES_MODULE'] = 'YES'
+        end
+      end
+    end
+  end
+end

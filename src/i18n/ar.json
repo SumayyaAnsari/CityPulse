@@ -1,0 +1,49 @@
+{
+  "app_name": "سيتي بالس",
+
+  "sign_in": "تسجيل الدخول",
+  "create_account": "إنشاء حساب",
+  "login": "تسجيل الدخول",
+  "signup": "إنشاء حساب",
+  "back_to_login": "العودة لتسجيل الدخول",
+  "forgot_password": "هل نسيت كلمة المرور؟",
+
+  "email": "البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "confirm_password": "تأكيد كلمة المرور",
+
+  "enter_email": "you@example.com",
+  "enter_password": "أدخل كلمة المرور",
+  "choose_password": "اختر كلمة المرور",
+  "repeat_password": "أعد إدخال كلمة المرور",
+
+  "email_required": "البريد الإلكتروني مطلوب",
+  "email_invalid": "يرجى إدخال بريد إلكتروني صحيح",
+  "password_required": "كلمة المرور مطلوبة",
+  "password_min": "يجب أن تحتوي كلمة المرور على الأقل {{count}} أحرف",
+  "passwords_must_match": "يجب أن تتطابق كلمتا المرور",
+
+  "login_failed": "فشل تسجيل الدخول",
+  "signup_failed": "فشل إنشاء الحساب",
+
+  "search_placeholder": "ابحث عن فعالية أو فنان",
+  "search_city": "المدينة",
+
+  
+ "favorites": "المفضلة",
+  "no_favorites": "لا توجد عناصر مفضلة",
+  "search_button": "بحث",
+"loading": "جاري التحميل...",
+"english": "الإنجليزية",
+"arabic": "العربية",
+"profile": "الملف الشخصي",
+  "logout": "تسجيل الخروج",
+  "logout_confirm": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+  "logout_failed": "فشل تسجيل الخروج",
+
+  "language": "اللغة",
+
+  "ok": "حسنًا",
+  "cancel": "إلغاء",
+  "user": "مستخدم"
+}
